@@ -69,36 +69,20 @@ Observa cómo cada extensión añade información adicional que puede influir en
 
 Muchos sistemas modernos ignoran el campo **Common Name** y utilizan la extensión **Subject Alternative Name (SAN)** para validar el nombre del servidor.
 
-Crea un archivo de configuración simple para definir esta extensión.
+Las versiones recientes de OpenSSL (3.x) permiten añadir esta extensión directamente desde la línea de comandos sin necesidad de un archivo de configuración adicional.
 
-```bash
-nano san.conf
-```
-
-Añade el siguiente contenido:
-
-```
-[req]
-distinguished_name=req
-
-[ext]
-subjectAltName=DNS:test.local
-```
-
-Guarda el archivo.
-
-Ahora genera un nuevo certificado utilizando esa configuración.
+Genera un nuevo certificado autofirmado con SAN ejecutando:
 
 ```bash
 openssl req -new -x509 \
 -key rsa-private.key \
 -out server-san.crt \
 -days 365 \
--config san.conf \
--extensions ext
+-subj "/CN=test.local" \
+-addext "subjectAltName = DNS:test.local"
 ```
 
-Se generará un nuevo certificado llamado `server-san.crt`.
+Cuando el comando finalice se generará un nuevo certificado llamado `server-san.crt` que incluye la extensión SAN adecuada.
 
 ---
 

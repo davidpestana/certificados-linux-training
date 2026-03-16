@@ -61,6 +61,8 @@ En este laboratorio trabajaremos con distintos tipos de servicios.
 
 Servidor web moderno ampliamente utilizado para servir contenido HTTPS.
 
+Si el servidor de aplicaciones es Java, suele utilizar keystores específicos (JKS/PKCS12) para gestionar sus certificados. Puedes revisar el ejercicio `04-uso-certs-en-apps-java.md` del **Lab07** para ver cómo se configuran keystores y truststores en aplicaciones Java.
+
 ---
 
 **Apache HTTP Server**
