@@ -113,12 +113,27 @@ Esta configuración indica a NGINX que escuche en el puerto 443 y utilice los ce
 
 ---
 
-### Paso 5 — Iniciar el servidor NGINX con Docker
+### Paso 5 — Crear una red Docker para el laboratorio
+
+Para que **otros contenedores puedan resolver el servidor por nombre** (sin Docker Compose), vamos a usar una red Docker *user-defined*, que sí incluye DNS interno.
+
+En el host (Codespace), crea la red si no existe:
+
+```bash
+docker network inspect lab08-net >/dev/null 2>&1 || docker network create lab08-net
+```
+
+---
+
+### Paso 6 — Iniciar el servidor NGINX con Docker
 
 Desde `~/tls-web` (para que los volúmenes monten bien), ejecuta el servidor con Docker:
 
 ```bash
 docker run -d \
+--name lab08-nginx \
+--network lab08-net \
+--network-alias web.test.local \
 -p 8443:443 \
 -v $(pwd)/index.html:/usr/share/nginx/html/index.html \
 -v $(pwd)/nginx.conf:/etc/nginx/nginx.conf \
@@ -137,7 +152,7 @@ Deberías ver un contenedor NGINX activo.
 
 ---
 
-### Paso 6 — Probar la conexión HTTPS
+### Paso 7 — Probar la conexión HTTPS
 
 Desde la terminal del Codespace (da igual el directorio), prueba a conectarte al servidor:
 

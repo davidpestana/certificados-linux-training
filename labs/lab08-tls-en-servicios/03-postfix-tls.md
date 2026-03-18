@@ -42,7 +42,7 @@ Esto indica que el puerto HTTPS del contenedor está expuesto en el puerto `8443
 En el host, lanza un contenedor que actuará como cliente; se abrirá una shell y quedarás dentro del contenedor:
 
 ```bash
-docker run -it --rm curlimages/curl sh
+docker run -it --rm --network lab08-net curlimages/curl sh
 ```
 
 Se abrirá una shell dentro del contenedor.
@@ -53,10 +53,12 @@ Desde este contenedor intentaremos conectarnos al servidor HTTPS.
 
 ### Paso 3 — Probar la conexión HTTPS desde el contenedor cliente
 
+Como el servidor NGINX se arrancó en una red Docker *user-defined* con el alias `web.test.local`, este contenedor cliente puede resolverlo por DNS interno de Docker.
+
 Dentro del contenedor ejecuta:
 
 ```bash
-curl https://host.docker.internal:8443
+curl https://web.test.local
 ```
 
 Es posible que aparezca un error relacionado con el certificado.
@@ -72,7 +74,7 @@ Esto reproduce el comportamiento habitual cuando un cliente intenta conectarse a
 Para observar la respuesta del servidor, repite la conexión ignorando la verificación del certificado.
 
 ```bash
-curl -k https://host.docker.internal:8443
+curl -k https://web.test.local
 ```
 
 La salida debería mostrar el contenido del servidor:
@@ -98,7 +100,7 @@ Vuelve a la shell del contenedor cliente (la del paso 2) y crea ahí un archivo 
 Ahora realiza la conexión indicando explícitamente la CA.
 
 ```bash
-curl --cacert ca.crt https://host.docker.internal:8443
+curl --cacert ca.crt https://web.test.local
 ```
 
 Esta vez la conexión debería realizarse sin errores de certificado.
