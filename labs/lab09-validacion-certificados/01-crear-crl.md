@@ -50,6 +50,15 @@ Estos archivos permiten a la CA gestionar certificados y revocaciones.
 
 Crea una lista de revocación vacía.
 
+> Si al ejecutar el siguiente comando obtienes el error
+> `cannot lookup how long until the next CRL is due`,
+> significa que falta la directiva `default_crl_days` en tu `openssl-ca.cnf`.
+> Abre el archivo y añade esta línea dentro de la sección `[ CA_default ]`:
+>
+> ```text
+> default_crl_days  = 30
+> ```
+
 ```bash id="kqu5hw"
 openssl ca -config openssl-ca.cnf -gencrl -out crl/ca.crl
 ```

@@ -114,6 +114,7 @@ certificate       = $dir/ca.crt
 serial            = $dir/serial
 private_key       = $dir/private/ca.key
 default_days      = 365
+default_crl_days  = 30
 default_md        = sha256
 policy            = policy_any
 
