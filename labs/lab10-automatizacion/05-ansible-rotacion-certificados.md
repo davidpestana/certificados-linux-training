@@ -25,6 +25,7 @@ FROM debian:bookworm-slim
 RUN apt-get update && apt-get install -y --no-install-recommends \
     nginx \
     openssh-server \
+    python3 \
     && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /run/sshd \
@@ -37,7 +38,13 @@ EXPOSE 22 80
 CMD service ssh start && nginx -g "daemon off;"
 ```
 
-3. Crea **docker-compose.yml** con un servicio `web1`, puertos 2222 (SSH) y 8080 (nginx), y un volumen para certificados:
+> **¿Por qué `python3`?**
+> Ansible se conecta por SSH al nodo gestionado y ejecuta módulos escritos
+> en Python. Sin un intérprete de Python en la máquina destino, la mayoría
+> de módulos (`copy`, `file`, `service`, etc.) fallarán con
+> `MODULE FAILURE` o `discovered Python interpreter not found`.
+
+3. Crea **docker-compose.yml** con un servicio `web1`, puertos 2522 (SSH) y 8080 (nginx), y un volumen para certificados:
 
 ```yaml
 services:
@@ -45,7 +52,7 @@ services:
     build: .
     container_name: web1
     ports:
-      - "2222:22"
+      - "2522:22"
       - "8080:80"
     volumes:
       - ./certs:/etc/ssl/local
@@ -66,7 +73,7 @@ docker compose exec web1 bash
 
 Sal con `exit`. Los configs y certificados se editan en el host en `certs/` (y otras carpetas que montes); no hace falta entrar al contenedor para eso.
 
-6. El contenedor `web1` expone SSH en el puerto **2222** y nginx en **8080**. Ansible se conectará por SSH al puerto 2222 (usuario `root`, contraseña `lab` en este entorno de prácticas; en producción se usarían claves).
+6. El contenedor `web1` expone SSH en el puerto **2522** y nginx en **8080**. Ansible se conectará por SSH al puerto 2522 (usuario `root`, contraseña `lab` en este entorno de prácticas; en producción se usarían claves).
 
 ---
 
@@ -79,11 +86,11 @@ mkdir -p ~/labs/ansible-certs
 cd ~/labs/ansible-certs
 ```
 
-2. Crea el inventario `hosts.ini` apuntando al contenedor levantado por Compose (SSH en localhost:2222):
+2. Crea el inventario `hosts.ini` apuntando al contenedor levantado por Compose (SSH en localhost:2522):
 
 ```ini
 [webservers]
-web1 ansible_host=127.0.0.1 ansible_port=2222 ansible_user=root ansible_connection=ssh
+web1 ansible_host=127.0.0.1 ansible_port=2522 ansible_user=root ansible_connection=ssh
 ```
 
 Para que Ansible use contraseña en este lab de prácticas (solo entorno aislado):
