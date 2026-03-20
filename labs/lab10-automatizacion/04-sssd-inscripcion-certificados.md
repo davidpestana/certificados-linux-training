@@ -21,6 +21,28 @@ man sssd
 man sssd.conf
 ```
 
+> **¿`man sssd` no funciona?**
+>
+> En Codespaces y entornos mínimos `sssd` no está instalado.
+> Puedes instalar el paquete para disponer de la herramienta y sus manuales:
+>
+> ```bash
+> sudo apt update && sudo apt install -y sssd sssd-tools
+> ```
+>
+> Si no necesitas instalar el servicio completo, puedes instalar solo la
+> documentación (en algunas distribuciones):
+>
+> ```bash
+> sudo apt install -y sssd-common   # incluye man pages
+> ```
+>
+> Como alternativa, puedes consultar la documentación online:
+>
+> * [man sssd (man7.org)](https://man7.org/linux/man-pages/man8/sssd.8.html)
+> * [man sssd.conf (man7.org)](https://man7.org/linux/man-pages/man5/sssd.conf.5.html)
+> * [Documentación oficial de SSSD](https://sssd.io/docs/introduction.html)
+
 ---
 
 ### 2. Certificados y sssd en FreeIPA / AD
